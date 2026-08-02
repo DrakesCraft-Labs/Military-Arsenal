@@ -503,7 +503,7 @@ Mientras se lee el texto se van a encontrar con simbolos o caracteres especiales
 
         @Override
         public String getBugTrackerURL() {
-            return "https://github.com/Chagui68/Military-Arsenal-addon-for-Slimefun4/issues";
+            return "https://github.com/DrakesCraft-Labs/Military-Arsenal-addon-for-Slimefun4/issues";
         }
 
     También obligatorio de SlimefunAddon. Devuelve la URL donde reportar bugs. 
