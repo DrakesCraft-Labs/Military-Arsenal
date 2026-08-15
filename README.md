@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/Military-Arsenal-addon-for-Slimefun4/main/banner.svg" width="100%" alt="MILITARY ARSENAL animated banner" />
+</p>
+
 # ⚔️ WeaponsAddon - Military Arsenal for Slimefun
 
 [![Minecraft Version](https://img.shields.io/badge/Minecraft-1.20.6-brightgreen.svg)](https://www.spigotmc.org/)
@@ -73,3 +77,4 @@ Progressive crafting system with 6 unique components:
    stop
    # Wait for complete shutdown
    # Start server again
+
