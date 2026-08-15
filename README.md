@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/Military-Arsenal-addon-for-Slimefun4/main/banner.svg" width="100%" alt="MILITARY ARSENAL animated banner" />
 </p>
 
-# ⚔️ WeaponsAddon - Military Arsenal for Slimefun
+# ⚔️ Military Arsenal
 
 [![Minecraft Version](https://img.shields.io/badge/Minecraft-1.20.6-brightgreen.svg)](https://www.spigotmc.org/)
 [![Slimefun](https://img.shields.io/badge/Slimefun4-RC--37-blue.svg)](https://github.com/Slimefun/Slimefun4)
