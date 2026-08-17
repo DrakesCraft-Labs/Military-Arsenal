@@ -103,4 +103,4 @@ The final JAR is written to `target/MilitaryArsenal-v1.1.3.jar`. GitHub Actions 
 
 ## 📜 License
 
-Licensed under the **GNU General Public License v3.0**. Original author: Chagui68.
+Licensed under the **GNU General Public License v3.0**.
