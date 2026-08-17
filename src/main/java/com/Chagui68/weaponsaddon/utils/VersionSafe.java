@@ -1,41 +1,126 @@
 package com.Chagui68.weaponsaddon.utils;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Locale;
 
 public class VersionSafe {
 
     /**
-     * Safely gets an Attribute by its name.
-     * Handles attributes introduced in 1.20.5+ (SCALE, STEP_HEIGHT, etc.)
+     * Resolves an attribute by its registry key ("attack_damage", "generic_attack_damage",
+     * "max_health", "horse_jump_strength", ...).
+     *
+     * <p>Compatible from Minecraft 1.20.4 to 1.21.11+:
+     * <ul>
+     *   <li>1.20.4–1.21.1: the constants are {@code Attribute.GENERIC_ATTACK_DAMAGE} and there
+     *       is no {@code Registry.ATTRIBUTE}.</li>
+     *   <li>1.21.2–1.21.11: {@code Registry.ATTRIBUTE} exists and the constants dropped the
+     *       {@code GENERIC_} prefix.</li>
+     * </ul>
+     * Everything is resolved through reflection so the class never references a field that does
+     * not exist on older servers (no {@code NoSuchFieldError} at class load time).
      */
     public static Attribute getAttribute(String name) {
-        if (name == null)
+        if (name == null || name.isBlank()) {
             return null;
+        }
+
+        String key = name.toLowerCase(Locale.ROOT);
+        if (key.startsWith("generic_")) {
+            key = key.substring("generic_".length());
+        }
+        if (key.equals("horse_jump_strength")) {
+            key = "jump_strength";
+        }
+
+        // Modern path: Paper's attribute registry (1.21.2+).
+        Attribute fromRegistry = getAttributeFromRegistry(key);
+        if (fromRegistry != null) {
+            return fromRegistry;
+        }
+
+        // Legacy path: enum constants with GENERIC_ prefix (1.20.4–1.21.1).
+        Attribute fromConstant = getAttributeConstant(key, true);
+        if (fromConstant != null) {
+            return fromConstant;
+        }
+
+        // Modern constant path without prefix (1.21.2+).
+        return getAttributeConstant(key, false);
+    }
+
+    private static Attribute getAttributeFromRegistry(String key) {
         try {
-            // Check if the enum constant exists before calling valueOf to be safe
-            for (Attribute attr : Attribute.values()) {
-                if (attr.name().equals(name)) {
-                    return attr;
-                }
+            Class<?> registryClass = Class.forName("org.bukkit.Registry");
+            Object attributeRegistry = registryClass.getField("ATTRIBUTE").get(null);
+            if (attributeRegistry == null) {
+                return null;
             }
-
-            // Legacy fallbacks
-            if (name.equals("GENERIC_JUMP_STRENGTH")) {
-                for (Attribute attr : Attribute.values()) {
-                    if (attr.name().equals("HORSE_JUMP_STRENGTH")) {
-                        return attr;
-                    }
-                }
-            }
-
+            Object keyObject = NamespacedKey.minecraft(key);
+            Object value = attributeRegistry.getClass().getMethod("get", Object.class).invoke(attributeRegistry, keyObject);
+            return value instanceof Attribute attribute ? attribute : null;
+        } catch (ReflectiveOperationException | LinkageError ignored) {
+            // Registry.ATTRIBUTE is absent before 1.21.2.
             return null;
-        } catch (Exception e) {
+        }
+    }
+
+    private static Attribute getAttributeConstant(String key, boolean genericPrefix) {
+        try {
+            String constantName = genericPrefix ? "GENERIC_" + key.toUpperCase(Locale.ROOT)
+                    : key.toUpperCase(Locale.ROOT);
+            Object value = Attribute.class.getField(constantName).get(null);
+            return value instanceof Attribute attribute ? attribute : null;
+        } catch (ReflectiveOperationException | LinkageError ignored) {
+            return null;
+        }
+    }
+
+    /**
+     * Resolves a Material by its modern registry-style name, falling back to the
+     * legacy enum constant that existed before 1.21.11 renamed it.
+     *
+     * <p>Examples:
+     * <ul>
+     *   <li>{"CHAIN" resolves to {@code Material.CHAIN} on 1.20.4 and to
+     *       {@code Material.IRON_CHAIN} on 1.21.11+.</li>
+     * </ul>
+     */
+    public static Material getMaterial(String name) {
+        if (name == null || name.isBlank()) {
+            return null;
+        }
+
+        String upper = name.toUpperCase(Locale.ROOT);
+        Material direct = getMaterialConstant(upper);
+        if (direct != null) {
+            return direct;
+        }
+
+        // 1.21.11 renamed CHAIN to IRON_CHAIN (and COPPER_CHAIN variants appeared).
+        if (upper.equals("CHAIN")) {
+            return getMaterialConstant("IRON_CHAIN");
+        }
+        if (upper.equals("IRON_CHAIN")) {
+            return getMaterialConstant("CHAIN");
+        }
+
+        return null;
+    }
+
+    private static Material getMaterialConstant(String name) {
+        try {
+            Object value = Material.class.getField(name).get(null);
+            return value instanceof Material material ? material : null;
+        } catch (ReflectiveOperationException | LinkageError ignored) {
             return null;
         }
     }
@@ -55,18 +140,17 @@ public class VersionSafe {
      * Safely gets an Enchantment by a key that is valid across versions.
      */
     public static Enchantment getEnchantment(String key) {
-        // First try by NamespacedKey (Internal name, usually consistent)
         try {
-            Enchantment ench = Enchantment.getByKey(NamespacedKey.minecraft(key.toLowerCase()));
-            if (ench != null)
+            Enchantment ench = Enchantment.getByKey(NamespacedKey.minecraft(key.toLowerCase(Locale.ROOT)));
+            if (ench != null) {
                 return ench;
-        } catch (NoClassDefFoundError | NoSuchMethodError e) {
-            // NamespacedKey might be different or getByKey might fail on very old versions
+            }
+        } catch (NoClassDefFoundError | NoSuchMethodError ignored) {
+            // Retain the original fallback behavior for older Slimefun-compatible environments.
         }
 
-        // Fallback for older versions or specific mappings
         String name = null;
-        switch (key.toLowerCase()) {
+        switch (key.toLowerCase(Locale.ROOT)) {
             case "sharpness":
                 name = "DAMAGE_ALL";
                 break;
@@ -106,12 +190,14 @@ public class VersionSafe {
             case "bane_of_arthropods":
                 name = "DAMAGE_ARTHROPODS";
                 break;
+            default:
+                break;
         }
 
         if (name != null) {
             try {
                 return Enchantment.getByName(name);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
                 return null;
             }
         }
@@ -120,8 +206,7 @@ public class VersionSafe {
     }
 
     /**
-     * Safely gets a Particle by name.
-     * Handles 1.20.5+ renames.
+     * Safely gets a Particle by name and retains the upstream legacy aliases.
      */
     public static Particle getParticle(String name) {
         try {
@@ -142,112 +227,170 @@ public class VersionSafe {
                     return Particle.valueOf("HUGE_EXPLOSION");
                 if (name.equals("WITCH"))
                     return Particle.valueOf("SPELL_WITCH");
-            } catch (IllegalArgumentException e2) {
-                // Ignore
+            } catch (IllegalArgumentException ignored) {
+                // Ignore unavailable aliases.
             }
             return null;
         }
     }
 
     /**
-     * Safely gets a Sound by name.
-     * Handles 1.20.5+ rename of FIREWORK_ROCKET to FIREWORK.
+     * Resolves Bukkit Sound constants without using the OldEnum valueOf compatibility method,
+     * which Paper 26.2 schedules for removal.
      */
     public static Sound getSound(String name) {
-        try {
-            return Sound.valueOf(name);
-        } catch (IllegalArgumentException e1) {
-            try {
-                if (name.contains("FIREWORK_ROCKET")) {
-                    return Sound.valueOf(name.replace("FIREWORK_ROCKET", "FIREWORK"));
-                }
-                if (name.equals("BLOCK_NOTE_BLOCK_HAT"))
-                    return Sound.valueOf("BLOCK_NOTE_HAT");
-            } catch (IllegalArgumentException e2) {
-                // Ignore
+        Sound sound = getSoundConstant(name);
+        if (sound != null) {
+            return sound;
+        }
+
+        if (name.contains("FIREWORK_ROCKET")) {
+            sound = getSoundConstant(name.replace("FIREWORK_ROCKET", "FIREWORK"));
+            if (sound != null) {
+                return sound;
             }
+        }
+
+        if (name.equals("BLOCK_NOTE_BLOCK_HAT")) {
+            return getSoundConstant("BLOCK_NOTE_HAT");
+        }
+
+        return null;
+    }
+
+    private static Sound getSoundConstant(String name) {
+        try {
+            Object value = Sound.class.getField(name).get(null);
+            return value instanceof Sound sound ? sound : null;
+        } catch (ReflectiveOperationException | SecurityException ignored) {
             return null;
         }
     }
 
     /**
      * Safely gets a PotionEffectType by name.
-     * Handles 1.20.5+ renames (SLOWNESS -> SLOW, etc.)
      */
     @SuppressWarnings("deprecation")
     public static PotionEffectType getPotionEffectType(String name) {
         try {
-            // Try modern name first (1.20.5+)
             PotionEffectType type = PotionEffectType.getByName(name);
-            if (type != null) return type;
+            if (type != null)
+                return type;
 
-            // Fallbacks for legacy versions
-            if (name.equalsIgnoreCase("SLOWNESS")) {
+            if (name.equalsIgnoreCase("SLOWNESS"))
                 return PotionEffectType.getByName("SLOW");
-            }
-            if (name.equalsIgnoreCase("MINING_FATIGUE")) {
+            if (name.equalsIgnoreCase("MINING_FATIGUE"))
                 return PotionEffectType.getByName("SLOW_DIGGING");
-            }
-            if (name.equalsIgnoreCase("HASTE")) {
+            if (name.equalsIgnoreCase("HASTE"))
                 return PotionEffectType.getByName("FAST_DIGGING");
-            }
-            if (name.equalsIgnoreCase("STRENGTH")) {
+            if (name.equalsIgnoreCase("STRENGTH"))
                 return PotionEffectType.getByName("INCREASE_DAMAGE");
-            }
-            if (name.equalsIgnoreCase("INSTANT_HEALTH")) {
+            if (name.equalsIgnoreCase("INSTANT_HEALTH"))
                 return PotionEffectType.getByName("HEAL");
-            }
-            if (name.equalsIgnoreCase("INSTANT_DAMAGE")) {
+            if (name.equalsIgnoreCase("INSTANT_DAMAGE"))
                 return PotionEffectType.getByName("HARM");
-            }
-            if (name.equalsIgnoreCase("NAUSEA")) {
+            if (name.equalsIgnoreCase("NAUSEA"))
                 return PotionEffectType.getByName("CONFUSION");
-            }
-            if (name.equalsIgnoreCase("RESISTANCE")) {
+            if (name.equalsIgnoreCase("RESISTANCE"))
                 return PotionEffectType.getByName("DAMAGE_RESISTANCE");
-            }
-            if (name.equalsIgnoreCase("SPEED")) {
-                return PotionEffectType.getByName("SPEED"); // Stable, but safe to check
-            }
-            if (name.equalsIgnoreCase("FIRE_RESISTANCE")) {
+            if (name.equalsIgnoreCase("SPEED"))
+                return PotionEffectType.getByName("SPEED");
+            if (name.equalsIgnoreCase("FIRE_RESISTANCE"))
                 return PotionEffectType.getByName("FIRE_RESISTANCE");
-            }
-            if (name.equalsIgnoreCase("JUMP_BOOST")) {
+            if (name.equalsIgnoreCase("JUMP_BOOST"))
                 return PotionEffectType.getByName("JUMP");
-            }
-            if (name.equalsIgnoreCase("NIGHT_VISION")) {
+            if (name.equalsIgnoreCase("NIGHT_VISION"))
                 return PotionEffectType.getByName("NIGHT_VISION");
-            }
-            if (name.equalsIgnoreCase("ABSORPTION")) {
+            if (name.equalsIgnoreCase("ABSORPTION"))
                 return PotionEffectType.getByName("ABSORPTION");
-            }
-            if (name.equalsIgnoreCase("SATURATION")) {
+            if (name.equalsIgnoreCase("SATURATION"))
                 return PotionEffectType.getByName("SATURATION");
-            }
-            if (name.equalsIgnoreCase("LEVITATION")) {
+            if (name.equalsIgnoreCase("LEVITATION"))
                 return PotionEffectType.getByName("LEVITATION");
-            }
-            if (name.equalsIgnoreCase("GLOWING")) {
+            if (name.equalsIgnoreCase("GLOWING"))
                 return PotionEffectType.getByName("GLOWING");
-            }
-            if (name.equalsIgnoreCase("WITHER")) {
+            if (name.equalsIgnoreCase("WITHER"))
                 return PotionEffectType.getByName("WITHER");
-            }
-            if (name.equalsIgnoreCase("HUNGER")) {
+            if (name.equalsIgnoreCase("HUNGER"))
                 return PotionEffectType.getByName("HUNGER");
-            }
-            if (name.equalsIgnoreCase("WEAKNESS")) {
+            if (name.equalsIgnoreCase("WEAKNESS"))
                 return PotionEffectType.getByName("WEAKNESS");
-            }
-            if (name.equalsIgnoreCase("DARKNESS")) {
+            if (name.equalsIgnoreCase("DARKNESS"))
                 return PotionEffectType.getByName("DARKNESS");
-            }
 
             return null;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             return null;
         }
     }
+
+    /**
+     * Detects the Minecraft Java version currently running on the server.
+     * Returns a plain version string such as "1.21.11" or "unknown" when it cannot
+     * be determined.
+     */
+    public static String getMinecraftVersion() {
+        try {
+            String version = Bukkit.getMinecraftVersion();
+            if (version != null && !version.isBlank()) {
+                return version;
+            }
+        } catch (Throwable ignored) {
+            // Older Bukkit/Paper builds without Bukkit#getMinecraftVersion().
+        }
+
+        String bukkit = Bukkit.getBukkitVersion();
+        if (bukkit == null || bukkit.isBlank()) {
+            return "unknown";
+        }
+        int dash = bukkit.indexOf('-');
+        String version = dash > 0 ? bukkit.substring(0, dash) : bukkit;
+        return version.isBlank() ? "unknown" : version;
+    }
+
+    /**
+     * Checks whether the server is running the exact given Minecraft Java version,
+     * e.g. isMinecraft("1.21.11").
+     */
+    public static boolean isMinecraft(String version) {
+        return getMinecraftVersion().equalsIgnoreCase(version);
+    }
+
+    /**
+     * Checks whether the server is running the given Minecraft Java version or a
+     * newer one, e.g. isMinecraftAtLeast("1.21.11").
+     */
+    public static boolean isMinecraftAtLeast(String version) {
+        int[] current = parseVersion(getMinecraftVersion());
+        int[] required = parseVersion(version);
+        int max = Math.max(current.length, required.length);
+        for (int i = 0; i < max; i++) {
+            int a = i < current.length ? current[i] : 0;
+            int b = i < required.length ? required[i] : 0;
+            if (a != b) {
+                return a > b;
+            }
+        }
+        return true;
+    }
+
+    private static int[] parseVersion(String version) {
+        if (version == null) {
+            return new int[0];
+        }
+        String[] parts = version.split("\\.");
+        int[] result = new int[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            StringBuilder digits = new StringBuilder();
+            for (char c : parts[i].toCharArray()) {
+                if (Character.isDigit(c)) {
+                    digits.append(c);
+                } else {
+                    break;
+                }
+            }
+            result[i] = digits.length() == 0 ? 0 : Integer.parseInt(digits.toString());
+        }
+        return result;
+    }
 }
-
-
