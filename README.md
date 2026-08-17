@@ -10,7 +10,7 @@
         <img src="https://img.shields.io/github/actions/workflow/status/DrakesCraft-Labs/Military-Arsenal/build.yml?label=Build&color=00BFFF" alt="Build">
     </a>
     <a href="https://modrinth.com/plugin/weaponsaddon">
-        <img src="https://img.shields.io/badge/Modrinth-WeaponsAddon-1BD96A" alt="Modrinth">
+        <img src="https://img.shields.io/badge/Modrinth-MilitaryArsenal-1BD96A" alt="Modrinth">
     </a>
     <a href="https://www.curseforge.com/minecraft/bukkit-plugins/militaryarsenal">
         <img src="https://img.shields.io/badge/CurseForge-Military%20Weapons%20for%20Slimefun4-orange" alt="CurseForge">
