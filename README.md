@@ -12,8 +12,8 @@
     <a href="https://modrinth.com/plugin/weaponsaddon">
         <img src="https://img.shields.io/badge/Modrinth-MilitaryArsenal-1BD96A" alt="Modrinth">
     </a>
-    <a href="https://www.curseforge.com/minecraft/bukkit-plugins/military-weapons-for-slimefun4">
-        <img src="https://img.shields.io/badge/CurseForge-MilitaryArsenal-orange" alt="CurseForge">
+    <a href="https://www.curseforge.com/minecraft/bukkit-plugins/militaryarsenal">
+        <img src="https://img.shields.io/badge/CurseForge-Military%20Weapons%20for%20Slimefun4-orange" alt="CurseForge">
     </a>
     <a href="LICENSE">
         <img src="https://img.shields.io/github/license/DrakesCraft-Labs/Military-Arsenal?label=License&color=228B22" alt="License">
