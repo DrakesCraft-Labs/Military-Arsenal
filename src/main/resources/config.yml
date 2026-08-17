@@ -1,3 +1,8 @@
 # ==========================================
 # Military Arsenal - General Configuration
 # ==========================================
+
+# Bombardment security limits.
+# El unico limite horizontal es el world border del mundo del terminal.
+bombardment:
+  cooldown_seconds: 30

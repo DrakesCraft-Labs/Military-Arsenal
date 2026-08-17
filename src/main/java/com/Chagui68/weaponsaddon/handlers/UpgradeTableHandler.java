@@ -3,9 +3,10 @@ package com.Chagui68.weaponsaddon.handlers;
 import com.Chagui68.weaponsaddon.WeaponsAddon;
 import com.Chagui68.weaponsaddon.items.components.MilitaryComponents;
 import com.Chagui68.weaponsaddon.items.machines.energy.EnergyManager;
+import com.Chagui68.weaponsaddon.utils.VersionSafe;
 import com.Chagui68.weaponsaddon.utils.WeaponUtils;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import com.github.drakescraft_labs.slimefun4.api.items.SlimefunItem;
+import com.github.drakescraft_labs.slimefun4.libraries.dough.items.CustomItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -355,12 +356,12 @@ public class UpgradeTableHandler implements Listener {
 
     private void applySynchronizedAttributes(ItemMeta meta, Material type) {
         // 1. Clear ALL our military modifiers first
-        removeOurModifiers(meta, Attribute.GENERIC_ATTACK_DAMAGE, "military_damage");
-        removeOurModifiers(meta, Attribute.GENERIC_ATTACK_SPEED, "military_speed");
+        removeOurModifiers(meta, VersionSafe.getAttribute("attack_damage"), "military_damage");
+        removeOurModifiers(meta, VersionSafe.getAttribute("attack_speed"), "military_speed");
 
         // 1.1 Clear legacy boss modifiers if they exist (to prevent stacking)
-        removeOurModifiers(meta, Attribute.GENERIC_ATTACK_DAMAGE, "att");
-        removeOurModifiers(meta, Attribute.GENERIC_ATTACK_SPEED, "att_speed");
+        removeOurModifiers(meta, VersionSafe.getAttribute("attack_damage"), "att");
+        removeOurModifiers(meta, VersionSafe.getAttribute("attack_speed"), "att_speed");
 
         // 2. Resolve Levels
         int dmgLevel = meta.getPersistentDataContainer().getOrDefault(
@@ -377,7 +378,7 @@ public class UpgradeTableHandler implements Listener {
         double totalDmgBonus = bossDmgBonus + upgradeDmgBonus;
 
         if (totalDmgBonus > 0) {
-            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(
+            meta.addAttributeModifier(VersionSafe.getAttribute("attack_damage"), new AttributeModifier(
                     UUID.randomUUID(), "military_damage",
                     totalDmgBonus, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
@@ -389,7 +390,7 @@ public class UpgradeTableHandler implements Listener {
 
         // We ALWAYS apply a speed modifier if ANY upgrade exists, to prevent reset to
         // 4.0
-        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(
+        meta.addAttributeModifier(VersionSafe.getAttribute("attack_speed"), new AttributeModifier(
                 UUID.randomUUID(), "military_speed",
                 baseSpdModifier + spdBonus, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
     }
@@ -538,7 +539,7 @@ public class UpgradeTableHandler implements Listener {
         double speed;
 
         if (meta != null && meta.hasAttributeModifiers()) {
-            Collection<AttributeModifier> mods = meta.getAttributeModifiers(Attribute.GENERIC_ATTACK_SPEED);
+            Collection<AttributeModifier> mods = meta.getAttributeModifiers(VersionSafe.getAttribute("attack_speed"));
             if (mods != null && !mods.isEmpty()) {
                 speed = 4.0;
                 for (AttributeModifier mod : mods) {

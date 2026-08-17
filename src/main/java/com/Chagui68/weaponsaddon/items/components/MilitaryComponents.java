@@ -1,13 +1,14 @@
 package com.Chagui68.weaponsaddon.items.components;
 
 import com.Chagui68.weaponsaddon.items.vouchers.MilitaryVouchers;
-import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
-import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
-import io.github.thebusybiscuit.slimefun4.core.attributes.Radioactivity;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import com.Chagui68.weaponsaddon.utils.VersionSafe;
+import com.github.drakescraft_labs.slimefun4.api.items.ItemGroup;
+import com.github.drakescraft_labs.slimefun4.api.items.SlimefunItem;
+import com.github.drakescraft_labs.slimefun4.api.items.SlimefunItemStack;
+import com.github.drakescraft_labs.slimefun4.api.recipes.RecipeType;
+import com.github.drakescraft_labs.slimefun4.api.SlimefunAddon;
+import com.github.drakescraft_labs.slimefun4.core.attributes.Radioactivity;
+import com.github.drakescraft_labs.slimefun4.implementation.SlimefunItems;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -112,7 +113,7 @@ public class MilitaryComponents {
         // ========== TIER 3: SPECIALIZED WEAPON COMPONENTS ==========
         public static final SlimefunItemStack WEAPON_BARREL = new SlimefunItemStack(
                         "MA_WEAPON_BARREL",
-                        Material.CHAIN,
+                        VersionSafe.getMaterial("CHAIN"),
                         "&c▬ &4Weapon Barrel",
                         "",
                         "&7Precision rifled barrel",

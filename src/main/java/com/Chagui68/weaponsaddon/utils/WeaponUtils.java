@@ -37,7 +37,7 @@ public class WeaponUtils {
         // 1. Attribute Modifiers (Upgrades from Upgrade Table)
         boolean hasMilitaryModifier = false;
         if (meta != null && meta.hasAttributeModifiers()) {
-            Collection<AttributeModifier> mods = meta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE);
+            Collection<AttributeModifier> mods = meta.getAttributeModifiers(VersionSafe.getAttribute("attack_damage"));
             if (mods != null) {
                 for (AttributeModifier mod : mods) {
                     if (mod.getOperation() == AttributeModifier.Operation.ADD_NUMBER) {
