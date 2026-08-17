@@ -13,7 +13,7 @@
         <img src="https://img.shields.io/badge/Modrinth-MilitaryArsenal-1BD96A" alt="Modrinth">
     </a>
     <a href="https://www.curseforge.com/minecraft/bukkit-plugins/militaryarsenal">
-        <img src="https://img.shields.io/badge/CurseForge-Military%20Weapons%20for%20Slimefun4-orange" alt="CurseForge">
+        <img src="https://img.shields.io/badge/CurseForge-MilitaryArsenal-orange" alt="CurseForge">
     </a>
     <a href="LICENSE">
         <img src="https://img.shields.io/github/license/DrakesCraft-Labs/Military-Arsenal?label=License&color=228B22" alt="License">
@@ -24,118 +24,83 @@
     <img src="https://img.shields.io/badge/Slimefun4-Drake%20v11-brightgreen" alt="Slimefun4-Drake v11">
 </p>
 
-# ⚔️ Military Arsenal — Advanced Warfare para Slimefun
+# ⚔️ Military Arsenal — Advanced Warfare for Slimefun
 
-> Transforma tu servidor de Slimefun en un campo de batalla tactico con tecnologia militar de vanguardia.
+> Turn your Slimefun server into a tactical battlefield with cutting-edge military technology.
 
-**Military Arsenal** es un addon de combate para **Slimefun4-Drake** con armas de fuego, municion dedicada, torretas defensivas, maquinas de guerra, progresion Void/Antimateria y bombardeo por coordenadas GPS.
+**Military Arsenal** is a combat addon for **Slimefun4-Drake** featuring firearms, dedicated ammunition, defensive turrets, war machines, Void/Antimatter progression, and GPS coordinate-based bombardment.
 
-⚠️ **Disclaimer**: addon comunitario **no oficial**; no esta afiliado ni respaldado por el equipo oficial de Slimefun4.
+⚠️ **Disclaimer**: unofficial community addon; not affiliated with or endorsed by the official Slimefun4 team.
 
 ---
 
 ## 🚀 Features
 
-### 🔫 Armas y municion
-- **Machine Gun** — ametralladora de disparo por rafagas: 5 disparos rapidos, 5 HP por bala (25 HP por rafaga), indestructible, efectos de particulas y sonidos realistas
-- **Antimatter Rifle** — arma endgame con progresion Void/Antimateria
-- **Sistema de municion** — balas fabricables con consumo automatico al disparar
-- **Weapon Upgrade Table** — modulos de mejora de dano y velocidad
+### 🔫 Weapons & Ammunition
+- **Machine Gun** — burst-fire combat: 5 rapid shots, 5 HP per bullet (25 HP per burst), unbreakable, epic particle effects and realistic sounds
+- **Antimatter Rifle** — endgame weapon with Void/Antimatter progression
+- **Ammunition system** — craftable bullets with automatic consumption when firing
+- **Weapon Upgrade Table** — damage and speed upgrade modules
 
-### 🛡️ Sistemas defensivos
-- **Torretas** Attack, Sniper, Melee y Machine Gun con progresion en 4 etapas
-- **Torreta montable clase Wraith** — maquina de guerra pilotable
-- Estructuras NBT multinivel con proteccion de mejora/desmantelamiento
+### 🛡️ Defensive Systems
+- **Turrets** Attack, Sniper, Melee and Machine Gun with 4-stage progression
+- **Wraith-class mountable turret** — pilotable war machine
+- Multi-level NBT structures with protected upgrade/dismantle handling
 
-### 💣 Maquinas y guerra
-- **Bombardment Terminal** — ataque aereo por coordenadas GPS exactas (X Y Z), GUI interactiva con energia en tiempo real, doble combustible (TNT + Nether Stars) y 2 oleadas de 4 bombas TNT
-- **Military Crafting Table** y **Military Machine Fabricator** — mesas de crafting militar
-- **Ammunition Workshop** — taller de municion
-- **Antimatter Pedestal y Ritual** — progresion de antimateria
-- **Military Vouchers**, **armadura Void** y componentes por niveles (Circuito Militar → Targeting System / Guidance Chip / Reinforced Frame → Quantum Processor / Explosive Core)
+### 💣 Machines & War
+- **Bombardment Terminal** — GPS coordinate-based airstrikes (X Y Z), interactive GUI with real-time energy display, dual fuel (TNT + Nether Stars), 2 waves of 4 TNT bombs
+- **Military Crafting Table** and **Military Machine Fabricator** — military crafting workbenches
+- **Ammunition Workshop** — ammunition production
+- **Antimatter Pedestal & Ritual** — antimatter progression
+- **Military Vouchers**, **Void armor** and tiered components (Military Circuit → Targeting System / Guidance Chip / Reinforced Frame → Quantum Processor / Explosive Core)
 
 ---
 
-## 🧰 Compatibilidad
+## 🧰 Compatibility
 
-| Componente | Rango |
+| Component | Range |
 |---|---|
-| **Servidor** | Paper / Purpur **26.2+** (target de compilacion) |
-| **Deteccion de version (VersionSafe)** | Minecraft Java **1.20.4 → 1.21.11** |
+| **Server** | Paper / Purpur **26.2+** (build target) |
+| **Version detection (VersionSafe)** | Minecraft Java **1.20.4 → 1.21.11** |
 | **Java runtime** | 25 (build) / 21-compatible bytecode |
-| **Slimefun** | Slimefun4-Drake v11 (obligatorio) |
-| **Networks** | Opcional (carga antes para registrar recetas) |
+| **Slimefun** | Slimefun4-Drake v11 (required) |
+| **Networks** | Optional (loads before to register recipes) |
 
-El `VersionSafe` resuelve por reflexion atributos, materiales, encantamientos, sonidos, particulas y pociones tanto con los nombres modernos (sin prefijo `GENERIC_`, `IRON_CHAIN`) como con los de 1.20.4–1.21.1 (`GENERIC_ATTACK_DAMAGE`, `CHAIN`), sin referencia estatica a simbolos que no existen en servidores antiguos.
-
----
-
-## 📥 Instalacion
-
-1. Instala **Slimefun4-Drake v11** en un servidor Paper/Purpur **26.2+** con **Java 25**.
-2. Descarga `MilitaryArsenal-v1.1.3.jar` desde [GitHub Releases](https://github.com/DrakesCraft-Labs/Military-Arsenal/releases), [Modrinth](https://modrinth.com/plugin/weaponsaddon) o [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/military-weapons-for-slimefun4).
-3. Coloca el JAR en el directorio `plugins/` del servidor.
-4. Reinicia el servidor por completo.
-5. Abre la guia de Slimefun (`/sf guide`) y navega a la categoria **MILITARY ARSENAL**.
-
-**Networks** es opcional: Military Arsenal carga antes que Networks para que sus items y recetas queden registrados antes de que Networks construya sus indices.
+`VersionSafe` resolves attributes, materials, enchantments, sounds, particles and potions through reflection using both modern names (no `GENERIC_` prefix, `IRON_CHAIN`) and the 1.20.4–1.21.1 ones (`GENERIC_ATTACK_DAMAGE`, `CHAIN`), with no static references to symbols missing on older servers.
 
 ---
 
-## 💥 Bombardment Terminal
+## 📥 Installation
 
-El unico limite horizontal del bombardeo es el **world border** del mundo donde esta el terminal: los objetivos deben estar dentro del borde del mundo, en un chunk ya cargado y dentro de los limites de altura del mundo. No existe distancia maxima fija desde el terminal.
+1. Install **Slimefun4-Drake v11** on a Paper/Purpur **26.2+** server running **Java 25**.
+2. Download `MilitaryArsenal-v1.1.3.jar` from [GitHub Releases](https://github.com/DrakesCraft-Labs/Military-Arsenal/releases), [Modrinth](https://modrinth.com/plugin/weaponsaddon) or [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/militaryarsenal).
+3. Place the JAR in the server's `plugins/` directory.
+4. Restart the server completely.
+5. Open the Slimefun guide (`/sf guide`) and navigate to the **MILITARY ARSENAL** category.
 
-```yaml
-bombardment:
-  cooldown_seconds: 30
-```
-
-La ejecucion retardada de misiles revalida el borde del mundo y el estado del chunk antes de generar efectos o TNT.
-
----
-
-## 🔐 Seguridad / anti-dupe
-
-El build falla si reaparecen APIs o firmas de escalamiento de privilegios/backdoor (comandos de consola, OP, pardons, attachment dinamico de permisos, etc.).
-
-- Inventarios persistentes de maquinas copiadas bloqueados a un jugador por bloque.
-- Las maquinas con inventario copiado activo estan protegidas contra rotura y explosiones.
-- Shift-click y drag-transfer bloqueados en GUIs sensibles.
-- Los slots de resultado de crafting 4x4 y 6x6 son take-only.
-- Los resultados no reclamados se devuelven al cerrar la GUI.
+**Networks** is optional: Military Arsenal loads before Networks so its items and recipes are registered before Networks builds its indexes.
 
 ---
 
 ## 🛠️ Build
 
-Compila con JDK 25 (el bytecode generado es compatible con Java 21+):
+Build with JDK 25 (the generated bytecode is compatible with Java 21+):
 
 ```bash
 mvn -B -Dmaven.test.skip=true clean package
 ```
 
-El JAR final se escribe en `target/MilitaryArsenal-v1.1.3.jar`. GitHub Actions publica el JAR directo y los tags adjuntan el mismo JAR a la GitHub Release.
+The final JAR is written to `target/MilitaryArsenal-v1.1.3.jar`. GitHub Actions publishes the raw JAR and tags attach the same JAR to the GitHub Release.
 
 ---
 
-## 📖 Documentacion
+## 📖 Documentation
 
-- [Como_Funciona.md](Como_Funciona.md) — guia completa del addon (items, recetas, maquinas y mecanicas)
-- [GitHub Issues](https://github.com/DrakesCraft-Labs/Military-Arsenal/issues) — reporta bugs y sugiere mejoras
-
----
-
-## 📜 Licencia
-
-Military Arsenal se distribuye bajo la **GNU General Public License v3.0** incluida en este repositorio. Autor original: Chagui68.
-
-Minecraft es una marca de Microsoft/Mojang. Este proyecto es un addon comunitario independiente y **no esta afiliado, respaldado ni patrocinado por Microsoft o Mojang**. Slimefun y los demas proyectos referenciados pertenecen a sus respectivos autores y mantenedores.
+- [Como_Funciona.md](Como_Funciona.md) — full addon guide (items, recipes, machines and mechanics)
+- [GitHub Issues](https://github.com/DrakesCraft-Labs/Military-Arsenal/issues) — report bugs and suggest improvements
 
 ---
 
-<div align="center">
+## 📜 License
 
-**DrakesCraft Labs** · Desarrollado con 💚 para la comunidad de Slimefun
-
-</div>
+Licensed under the **GNU General Public License v3.0**. Original author: Chagui68.
