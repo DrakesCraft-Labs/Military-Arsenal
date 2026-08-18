@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="banner.svg" alt="Military Arsenal" width="800">
+    <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/Military-Arsenal-addon-for-Slimefun4/main/banner.svg" alt="Military Arsenal" width="800">
 </p>
 
 <p align="center">
@@ -25,6 +25,16 @@
 </p>
 
 # ⚔️ Military Arsenal — Advanced Warfare for Slimefun
+
+> ### 🏰 ¡Únete a la Comunidad Oficial de DrakesCraft!
+> 
+> * 🎮 **IP del Servidor**: `play.drakescraft.net` *(Java 1.21.11 & Bedrock)*
+> * 💬 **Discord Oficial**: [discord.gg/drakescraft](https://discord.gg/rR7FbfCt9Y)
+> * 🌐 **Web & Guía**: [drakescraft.net](https://drakescraft.net) — 🛒 **Tienda**: [tienda.drakescraft.net](https://tienda.drakescraft.net)
+> 
+> *¡Juega con este addon y más de 80 expansiones optimizadas en vivo en nuestra network de supervivencia técnica!*
+
+---
 
 > Turn your Slimefun server into a tactical battlefield with cutting-edge military technology.
 
