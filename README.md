@@ -111,6 +111,8 @@ The final JAR is written to `target/MilitaryArsenal-v1.1.3.jar`. GitHub Actions 
 
 ---
 
-## 📜 License
+## 📄 License & Sovereign Authorship
 
-Licensed under the **GNU General Public License v3.0**.
+Copyright © 2026 [**Chagui68**](https://github.com/Chagui68) · [**DrakesCraft Labs**](https://github.com/DrakesCraft-Labs).
+
+This project is an **original sovereign creation** engineered by **Chagui68** for the DrakesCraft network. All intellectual authorship belongs to Chagui68. Commercial resale, repackaging in paid setups, or removing creator attribution is strictly prohibited.
